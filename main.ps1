@@ -1,3 +1,4 @@
+# Write the initial choices to the console 
 Write-Host ""
 Write-Host "What would you like to do?"
 Write-Host "A) Collect new baseline"
@@ -42,10 +43,10 @@ elseif ($response -eq "B".ToUpper()) {
 
     $fileHashDictonary = @{}
     #load file|hash from baseline.txt and store in dictonary
-    $filePathesAndHashes = Get-Content -Path .\baseline.txt
+    $filePathsAndHashes = Get-Content -Path .\baseline.txt
 
     foreach ($f in $filePathsAndHashes) {
-        $fileHashDictonary.add($f.Split("|")[0], $f.Split("|")[1])
+        $fileHashDictonary.add($f.Split("|")[0].Trim(), $f.Split("|")[1].Trim())
     }
 
     #Begin continously
@@ -57,20 +58,20 @@ elseif ($response -eq "B".ToUpper()) {
         # for each file, calculate the hash and write to baseline.txt
         foreach ($f in $files) {
             $hash = Calculate-File-Hash $f.FullName
-
             #notify if a new file has been created
-            if ($null -eq $fileHashDirectory[$hash.Path]) {
+            if ($null -eq $fileHashDictonary[$hash.Path]) {
                 # A new file has been created
                 Write-Host "$($hash.Path) has been created!" -ForegroundColor Green
             }
-
-            # notify if a new file has been changed
-            if ($fileHashDictonary[$hash.Path] -eq $hash.Hash) {
-                # Path has not changed
-            }
             else {
-                # file has been comprimised!
-                Write-Host "$($hash.Path) Has been changed!" -ForegroundColor Yellow
+                # notify if a new file has been changed
+                if ($fileHashDictonary[$hash.Path] -eq $($hash.Hash)) {
+                    # Path has not changed
+                }
+                else {
+                    # file has been comprimised!
+                    Write-Host "$($hash.Path) Has been changed!" -ForegroundColor Yellow
+                }
             }
 
             # Notify if a file has been deleted
