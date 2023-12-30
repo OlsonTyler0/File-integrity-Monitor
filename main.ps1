@@ -1,3 +1,4 @@
+$file = "./files"
 $Running = $true
 
 while($Running) {
@@ -8,6 +9,7 @@ while($Running) {
         Write-Host "What would you like to do?"
         Write-Host "A) Collect new baseline"
         Write-Host "B) Begin monitoring files with saved baseline"
+        Write-Host "C) Choose a new folder to monitor"
         Write-Host "exit) exit program"
         $response = Read-Host -Prompt "Please enter 'A' or 'B'"
         Write-Host ""
@@ -38,7 +40,7 @@ while($Running) {
         Write-Host "Calculating Hashes..." -ForegroundColor Cyan
 
         #Collect all the files in the target folder
-        $files = Get-ChildItem -Path .\files
+        $files = Get-ChildItem -Path $file
 
         # For each file, calculate the hash and write it to baseline.txt
         foreach ($f in $files) {
@@ -105,6 +107,25 @@ while($Running) {
             } # end of loop through files
         } # End of while
     } # end of choice B
+    elseif ($response -eq "C".ToUpper()) {
+        # Use this to change default directory of files
+        $run = $true
+        while ($run) {
+            $reply = Read-Host -Prompt "What is the file path you would like to use?"
+            if (Test-Path -Path $reply) {
+                $file = $reply
+                Write-Host "File successfully inputed." -ForegroundColor Green
+                $run = $false
+            }
+            elseif ($reply -eq "exit".ToUpper()) {
+                $run = $false
+            }
+            else {
+                Write-Host "Error, File not valid please try again"
+            }
+        }
+
+    }
     elseif ($response -eq "exit".ToUpper()) {
         Write-Host "Exiting program"
         $Running = $false
