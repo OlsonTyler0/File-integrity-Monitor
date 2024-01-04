@@ -9,7 +9,7 @@ while($Running) {
         Write-Host "What would you like to do?"
         Write-Host "A) Collect new baseline"
         Write-Host "B) Begin monitoring files with saved baseline"
-        Write-Host "C) Choose a new folder to monitor"
+        Write-Host "C) Change Settings"
         Write-Host "exit) exit program"
         $response = Read-Host -Prompt "Please enter 'A' or 'B'"
         Write-Host ""
