@@ -37,3 +37,18 @@ function Monitor-File ()
                     $fileHashDictionary[$hash.Path] = $hash.Hash
                     }
                 }
+                
+              # Notify if a file has been deleted
+                
+              foreach ($key in $fileHashDictionary.Keys) {
+                $baselineFileStillExists = Test-Path -Path $key
+                if ((-Not $baselineFileStillExists) -and ($null -eq $AlertDictionary[$key])) {
+                    #One of the baseline files have been deleted notify user
+                    Write-Host "$($key) has been deleted!" -ForegroundColor DarkMagenta
+
+                    $AlertDictionary[$key] = $fileHashDictionary[$key]
+                }
+            } # stopping looping through keys
+        } # end of loop through files
+    } # End of while
+  } # end of function 
